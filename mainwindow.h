@@ -33,7 +33,7 @@ protected:
 
 private:
     void clear();
-    void dealImage();
+    void dealImage(const QImage &img);
     void updateImage();
     void updateColorValueWidget();
     bool isColorMeet(int color, int target);

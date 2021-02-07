@@ -59,12 +59,14 @@ void MainWindow::on_singleBtn_clicked()
 {
     if (switchType == Single)
     {
-        if (loadImage())
-        {
+        QImage currentImg = srcImage;
+        if (ui->checkBox_2->isChecked() && !resultImage.isNull())
+            currentImg = resultImage;
+
+        if (resultImage.isNull())
             resultImage = srcImage;
-            dealImage();
-            resultImage.save(resultFile);
-        }
+        dealImage(currentImg);
+        resultImage.save(resultFile);
     }
     else
     {
@@ -84,7 +86,7 @@ void MainWindow::on_singleBtn_clicked()
             else
                 resultFile = targetDir.absoluteFilePath(info.fileName().replace(info.baseName(), info.baseName() + resultFileSuffix));
 
-            dealImage();
+            dealImage(img);
             resultImage.save(resultFile);
         }
     }
@@ -383,18 +385,18 @@ void MainWindow::clear()
     updateColorValueWidget();
 }
 
-void MainWindow::dealImage()
+void MainWindow::dealImage(const QImage &img)
 {
-    int height = srcImage.height();
-    int cl = srcImage.bytesPerLine() / 4;
+    int height = img.height();
+    int cl = img.bytesPerLine() / 4;
+    uint value = ui->srcColorLineEdit->text().toUInt(nullptr, 16);
+    uint tvalue = ui->targetColorLineEdit->text().toUInt(nullptr, 16);
     for (int h = 0; h < height; ++h)
     {
-        const uint *row = (const uint *)srcImage.constScanLine(h);
+        const uint *row = (const uint *)img.constScanLine(h);
         for (int i = 0; i < cl; ++i)
         {
             uint A = row[i] >> 24 & 0x000000ff;
-            uint value = ui->srcColorLineEdit->text().toUInt(nullptr, 16);
-            uint tvalue = ui->targetColorLineEdit->text().toUInt(nullptr, 16);
             QColor switchColor = QColor::fromRgba(tvalue);
             if (keepAlpha)
                 switchColor = QColor::fromRgba(A << 24 | (tvalue & 0x00ffffff));

@@ -98,7 +98,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0,0,0,0,0">
       <item>
        <widget class="QLabel" name="label_3">
         <property name="text">
@@ -134,6 +134,13 @@
         </property>
         <property name="checked">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_2">
+        <property name="text">
+         <string>把当前编辑结果作为这次编辑源</string>
         </property>
        </widget>
       </item>
@@ -287,8 +294,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>764</width>
-             <height>340</height>
+             <width>742</width>
+             <height>366</height>
             </rect>
            </property>
            <property name="styleSheet">
