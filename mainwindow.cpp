@@ -5,6 +5,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QApplication>
+#include <QMimeData>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -18,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->resultIconWidget->installEventFilter(this);
     ui->colorValueWidget->installEventFilter(this);
     ui->colorValueWidget->setMouseTracking(true);
+    ui->srcIconWidget->setAcceptDrops(true);
     connect(ui->srcPathLineEdit, &QLineEdit::textChanged, this, &MainWindow::loadImage);
     ui->splitter->resize(18, 100);
 
@@ -371,6 +373,28 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             showColorValueWidget = ui->resultIconWidget;
         }
         updateImage();
+    }
+    else if (event->type() == QEvent::DragEnter)
+    {
+        if (watched == ui->srcIconWidget)
+            event->accept();
+    }
+    else if (event->type() == QEvent::Drop)
+    {
+        if (watched == ui->srcIconWidget)
+        {
+            QDropEvent *dropEvent = static_cast<QDropEvent *>(event);
+            const QMimeData *data = dropEvent->mimeData();
+            auto urls = data->urls();
+            for (int i = 0; i < urls.size(); ++i)
+            {
+                if (urls[i].isLocalFile())
+                {
+                    ui->srcPathLineEdit->setText(urls[i].toLocalFile());
+                    break;
+                }
+            }
+        }
     }
 
     return QMainWindow::eventFilter(watched, event);
